@@ -49,3 +49,46 @@ void Merge_sort(int* arr, int left, int right, int mid, int *tmp)
 		tmp[index--] = arr[begin2--];
 	memcpy(arr + left, tmp + left, sizeof(int)*(right - left + 1));
 }
+
+//37.两个链表的第一个公共结点
+//问题描述：输入两个链表，找出它们的第一个公共结点。
+
+//方法1：依次将链表1的每个结点和链表2的每个结点做比较，时间复杂度为0（mn）
+//方法2：建立两个栈，从后往前比，空间复杂度太高0(m+n)
+//方法3：找出两个链表的长度，判断较长的链表比较短的链表长多少，然后让较长的链表先走多少，然后两个一起走。
+
+//方法3的代码：
+class Solution {
+public:
+	ListNode* FindFirstCommonNode(ListNode* pHead1, ListNode* pHead2) {
+		int count1 = 0, count2 = 0;
+		ListNode* List1 = pHead1;
+		ListNode* List2 = pHead2;
+		while (List1)
+		{
+			List1 = List1->next;
+			++count1;
+		}
+		while (List2)
+		{
+			List2 = List2->next;
+			++count2;
+		}
+		int n = (count1>count2 ? count1 : count2) - (count1>count2 ? count2 : count1);
+		while (n--)
+		{
+			pHead1 = pHead1->next;
+		}
+		while (pHead1&&pHead2)
+		{
+			if (pHead1 == pHead2)
+				return pHead1;
+			else
+			{
+				pHead1 = pHead1->next;
+				pHead2 = pHead2->next;
+			}
+		}
+		return NULL;
+	}
+};
