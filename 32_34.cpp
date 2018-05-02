@@ -24,3 +24,55 @@ int NumberOf1Between1AndN_Solution(int n)
 //解决方法2：
 
 //分别判断每一位为0或者1或者大于1的时候，这个位取1的情况有多少种。
+
+//30:TopK问题
+
+方法1.使用大小堆解决，
+首先创建一个大小为K的堆，取n个数中的前K个，然后如果要是找出最大的元素的话则建立小堆
+然后对于后面的元素进行插入，插入前和堆中最小的元素比较，如果比最小的元素大的话，则替换最小的 元素，然后继续调整额，
+直到将整个数组遍历完成以后，堆中的元素就是最小的元素
+void Adjust(int *arr, int parent, int size)//此例子是找最大的前4个元素
+{
+	int child = parent * 2 + 1;
+	while (child <= size - 1)
+	{
+		if (child + 1 <= size - 1 && arr[child]>arr[child + 1])
+			++child;
+		if (arr[parent]>arr[child])
+		{
+			swap(arr[parent], arr[child]);
+			parent = child;
+			child = parent * 2 + 1;
+		}
+		else
+			break;
+	}
+}
+void Topk(int *arr, int size, int k)
+{
+	int *tmp = new int[k];
+	int index;
+	for (index = 0; index < k; index++)
+		tmp[index] = arr[index];
+	for (int i = ((k - 2) >> 1); i >= 0; i--)
+		Adjust(tmp, i, k);
+	for (int j = index; j < size; j++)
+	{
+		if (tmp[0] < arr[j])
+		{
+			tmp[0] = arr[j];
+			Adjust(tmp, 0, k);
+		}
+	}
+	for (int m = 0; m < k; m++)
+		cout << tmp[m] << " " << endl;
+}
+int main()
+{
+	int array[] = { 53, 17, 78, 9, 45, 65, 87, 23 };
+	Topk(array, 8, 4);
+	system("pause");
+	return 0;
+}
+
+
