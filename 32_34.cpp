@@ -75,4 +75,43 @@ int main()
 	return 0;
 }
 
+//方法2使用multiset
+
+求前K个最大的值，则建立一个less的set，燃后set中的元素等于四个以后，只要大于set.begin则将set的begin删除，将新的插入
+
+#include<vector>
+multiset<int, less<int>> test(const vector<int>& data, int k)//将数据数组传过来
+{
+
+	if (k < 1 || k > data.size())//如果元素小于l或者小于1则直接退出
+		return;
+	multiset<int, less<int>> tok;//创建一个set，相当于创建一个k个大小的容易
+	vector<int>::const_iterator it_data = data.begin();//注意const_iterator
+	for (; it_data != data.end(); ++it_data)
+	{
+		if (tok.size() < k)
+		{
+			tok.insert(*it_data);
+		}
+		else
+		{
+			multiset<int, less<int>>::iterator it_tok = tok.begin();
+			if ((*it_tok)<*it_data)
+			{
+				tok.erase(*it_tok);
+				tok.insert(*it_data);
+			}
+		}
+	}
+	return tok;
+}
+int main()
+{
+	vector<int> s = { 53, 17, 78, 9, 45, 65, 87, 23 };
+	multiset<int, less<int>> reslut = test(s, 4);
+
+	system("pause");
+	return 0;
+}
+
 
