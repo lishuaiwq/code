@@ -34,3 +34,100 @@ void Solution(vector<int>& s)
 	}
 	cout << result << endl;
 }
+
+28.字符串的排列
+问题描述：输入一个字符串, 按字典序打印出该字符串中字符的所有排列。例如输入字符串abc, 则打印出由字符a, b, c所能排列出来的所有字符串abc, acb, bac, bca, cab和cba。
+
+解题方法：全排列
+
+void Swap(int *arr, int a, int b)
+{
+	swap(arr[a], arr[b]);
+}
+void Permie(int *arr, int front, int end)
+{
+	if (front == end)
+	{
+		for (int i = 0; i < end; i++)
+		{
+			cout << arr[i] << " ";
+		}
+		cout << endl;
+	}
+	else
+	{
+		for (int i = front; i < end; i++)
+		{
+			Swap(arr,i,front);
+			Permie(arr,front+1, end);//这里不能变得！
+			Swap(arr, i, front);
+			
+		}
+	}
+}
+
+28.搜索树转双向链表
+
+1.根据中序遍历，设置prev进行遍历，递归写法
+PNode TransList()
+{
+	PNode prev = NULL;
+	_TransList(_pRoot, &prev);
+	while (_pRoot->_left)
+	{
+		_pRoot = _pRoot->_left;
+	}
+	return _pRoot;
+}
+private:
+	void _TransList(PNode pRoot, PNode *prev)
+	{
+		if (pRoot)
+		{
+			_TransList(pRoot->_left, &(*prev));
+			if (*prev)
+			{
+				(*prev)->_right = pRoot;
+			}
+			pRoot->_left = *prev;
+			*prev = pRoot;
+			_TransList(pRoot->_right, &(*prev));
+		}
+	}
+
+2.非递归的写法，即使用非递归的方式中序遍历二叉树
+TreeNode* Convert(TreeNode* pRootOfTree)
+{
+	TreeNode* cur = pRootOfTree;
+	TreeNode* prev = NULL;
+	stack<TreeNode*> s;
+	while (cur || !s.empty())
+	{
+		while (cur)//当cur不等于空的时候压进去
+		{
+			s.push(cur);
+			cur = cur->left;
+		}
+		cur = s.top();
+		if (prev)
+		{
+			prev->right = cur;
+		}
+		cur->left = prev;
+		prev = cur;
+		s.pop();
+		if (cur->right)
+		{
+			cur = cur->right;
+		}
+		else
+		{
+			cur = NULL;
+		}
+	}
+	while (pRootOfTree->left)
+	{
+		pRootOfTree = pRootOfTree->left;
+	}
+	return pRootOfTree;
+}
